@@ -91,21 +91,22 @@ const Dashboard = () => {
                     crop.status === 'Growing' ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'
                   }`}>
                     {crop.status}
-                  </span>
-                </div>
-                <div className="h-2 bg-gray-300 rounded">
-  <motion.div
-    className="h-2 bg-green-500 rounded"
-    initial={{ width: 0 }}
-    animate={{ width: `${crop.progress}%` }}
-    transition={{ duration: 1 }}
-  ></motion.div>
+        </span>
+      </div>
+
+      <div className="h-2 bg-gray-300 rounded">
+        <motion.div
+          className="h-2 bg-green-500 rounded"
+          initial={{ width: 0 }}
+          animate={{ width: `${crop.progress}%` }}
+          transition={{ duration: 1 }}
+        />
+      </div>
+    </motion.div>
+  ))}
 </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+</div>
+      
 
         {/* Recent Activities - Takes 1 column */}
         <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-6">
