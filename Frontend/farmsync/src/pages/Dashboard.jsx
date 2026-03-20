@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaLeaf, FaTractor, FaMoneyBillWave, FaCalendarAlt } from 'react-icons/fa';
+import { motion } from "framer-motion";
 
 const Dashboard = () => {
   const stats = [
@@ -32,19 +33,38 @@ const Dashboard = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat, index) => (
-          <div key={index} className={`${stat.bg} backdrop-blur-sm rounded-xl shadow-lg p-6 border border-white/20`}>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 text-sm">{stat.title}</p>
-                <p className={`text-3xl font-bold ${stat.text} mt-2`}>{stat.value}</p>
-              </div>
-              <span className={`text-3xl ${stat.text}`}>{stat.icon}</span>
-            </div>
-          </div>
-        ))}
+ <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+  {stats.map((stat, index) => (
+    <motion.div
+      key={index}
+      
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.2, duration: 0.5 }}
+
+      whileHover={{ scale: 1.08 }}
+      whileTap={{ scale: 0.95 }}
+
+      className={`bg-gradient-to-r ${stat.bg} text-white rounded-2xl p-6 shadow-lg`}
+    >
+      <div className="flex items-center justify-between">
+        
+        <div>
+          <p className="text-sm opacity-80">{stat.title}</p>
+          <p className="text-3xl font-bold mt-2">{stat.value}</p>
+        </div>
+
+        <motion.div 
+          whileHover={{ rotate: 10 }}
+          className="bg-white/20 p-4 rounded-full text-2xl"
+        >
+          {stat.icon}
+        </motion.div>
+
       </div>
+    </motion.div>
+  ))}
+</div>
 
       {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -54,8 +74,14 @@ const Dashboard = () => {
             <span className="text-2xl">🌱</span> Current Crops
           </h2>
           <div className="space-y-4">
-            {crops.map((crop, index) => (
-              <div key={index} className="border-b border-gray-200 pb-4 last:border-0">
+          {crops.map((crop, index) => (
+  <motion.div
+    key={index}
+    initial={{ opacity: 0, x: -50 }}
+    animate={{ opacity: 1, x: 0 }}
+    transition={{ delay: index * 0.2 }}
+    className="border-b border-gray-200 pb-4 last:border-0"
+  >
                 <div className="flex justify-between items-center mb-2">
                   <div>
                     <p className="font-medium text-gray-800">{crop.name}</p>
@@ -67,13 +93,14 @@ const Dashboard = () => {
                     {crop.status}
                   </span>
                 </div>
-                <div className="w-full bg-gray-200 h-2 rounded">
-                  <div 
-                    className={`h-2 rounded ${
-                      crop.status === 'Growing' ? 'bg-green-500' : 'bg-orange-500'
-                    }`} 
-                    style={{ width: `${crop.progress}%` }}
-                  ></div>
+                <div className="h-2 bg-gray-300 rounded">
+  <motion.div
+    className="h-2 bg-green-500 rounded"
+    initial={{ width: 0 }}
+    animate={{ width: `${crop.progress}%` }}
+    transition={{ duration: 1 }}
+  ></motion.div>
+</div>
                 </div>
               </div>
             ))}
