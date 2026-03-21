@@ -5,6 +5,7 @@ import java.util.List;
 import org.infyntrek.farmsync.dto.ExpenseDTO;
 import org.infyntrek.farmsync.response.ApiResponse;
 import org.infyntrek.farmsync.service.ExpenseService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -25,8 +27,9 @@ public class ExpenseController {
 	private final ExpenseService expenseService;
 	
 	@PostMapping
-	public ResponseEntity<ExpenseDTO> createExpense(@RequestBody ExpenseDTO expenseDTO) {
-		return ResponseEntity.ok(expenseService.createExpense(expenseDTO));
+	public ResponseEntity<ExpenseDTO> createExpense(@Valid @RequestBody ExpenseDTO expenseDTO) {
+		ExpenseDTO createdExpense = expenseService.createExpense(expenseDTO);
+		return ResponseEntity.status(HttpStatus.CREATED).body(createdExpense);
 	}
 	
 	@GetMapping("/{id}")
@@ -40,7 +43,7 @@ public class ExpenseController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<ExpenseDTO> updateExpense(@PathVariable Long id, @RequestBody ExpenseDTO expenseDTO) {
+	public ResponseEntity<ExpenseDTO> updateExpense(@PathVariable Long id, @Valid @RequestBody ExpenseDTO expenseDTO) {
 		return ResponseEntity.ok(expenseService.updateExpense(id, expenseDTO));
 	}
 	

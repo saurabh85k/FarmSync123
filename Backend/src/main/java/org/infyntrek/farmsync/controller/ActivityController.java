@@ -5,6 +5,7 @@ import java.util.List;
 import org.infyntrek.farmsync.dto.ActivityDTO;
 import org.infyntrek.farmsync.response.ApiResponse;
 import org.infyntrek.farmsync.service.ActivityService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -25,8 +27,9 @@ public class ActivityController {
 	private final ActivityService activityService;
 	
 	@PostMapping
-	public ResponseEntity<ActivityDTO> createActivity(@RequestBody ActivityDTO activityDTO) {
-		return ResponseEntity.ok(activityService.createActivity(activityDTO));
+	public ResponseEntity<ActivityDTO> createActivity(@Valid @RequestBody ActivityDTO activityDTO) {
+		ActivityDTO createdActivity = activityService.createActivity(activityDTO);
+		return ResponseEntity.status(HttpStatus.CREATED).body(createdActivity);
 	}
 	
 	@GetMapping("/{id}")
@@ -40,7 +43,7 @@ public class ActivityController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<ActivityDTO> updateActivity(@PathVariable Long id, @RequestBody ActivityDTO activityDTO) {
+	public ResponseEntity<ActivityDTO> updateActivity(@PathVariable Long id, @Valid @RequestBody ActivityDTO activityDTO) {
 		return ResponseEntity.ok(activityService.updateActivity(id, activityDTO));
 	}
 	
