@@ -1,12 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { 
-  FaTachometerAlt, 
-  FaSeedling, 
-  FaMoneyBillWave, 
-  FaClipboardList, 
+import { NavLink } from 'react-router-dom';
+import {
   FaChartBar,
-  FaCog 
+  FaClipboardList,
+  FaCloudSun,
+  FaMoneyBillWave,
+  FaSeedling,
+  FaTachometerAlt,
+  FaTractor,
 } from 'react-icons/fa';
 
 const Sidebar = () => {
@@ -19,34 +20,46 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="w-64 bg-gray-900/90 backdrop-blur-sm text-white h-screen sticky top-0 border-r border-green-800">
+    <aside className="sticky top-0 h-screen w-64 border-r border-green-800 bg-gray-900/90 text-white backdrop-blur-sm">
       <div className="p-4">
-        <div className="flex items-center gap-2 px-4 py-5 mb-6 border-b border-green-800">
-          <span className="text-3xl">🚜</span>
+        <div className="mb-6 flex items-center gap-3 border-b border-green-800 px-4 py-5">
+          <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-500/10 ring-1 ring-green-400/20">
+            <FaTractor className="text-2xl text-green-300" />
+          </span>
           <span className="text-xl font-bold text-green-400">FarmSync</span>
         </div>
+
         <nav>
           <ul className="space-y-2">
-            {menuItems.map((item, index) => (
-              <li key={index}>
-                <Link 
+            {menuItems.map((item) => (
+              <li key={item.path}>
+                <NavLink
                   to={item.path}
-                  className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-green-700/50 transition-all duration-300 hover:pl-6"
+                  end={item.path === '/'}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-300 ${
+                      isActive
+                        ? 'bg-gradient-to-r from-green-600/40 to-emerald-500/10 text-white shadow-lg shadow-green-900/20'
+                        : 'hover:bg-green-700/40 hover:pl-6'
+                    }`
+                  }
                 >
                   <span className="text-xl text-green-400">{item.icon}</span>
                   <span>{item.text}</span>
-                </Link>
+                </NavLink>
               </li>
             ))}
           </ul>
         </nav>
-        
-        {/* Farm Status */}
-        <div className="absolute bottom-4 left-4 right-4 p-4 bg-green-800/30 rounded-lg border border-green-700">
-          <p className="text-sm text-green-300 mb-2">🌤️ Farm Status</p>
+
+        <div className="absolute bottom-4 left-4 right-4 rounded-2xl border border-green-700 bg-green-800/30 p-4 shadow-lg shadow-green-950/30">
+          <p className="mb-2 flex items-center gap-2 text-sm text-green-300">
+            <FaCloudSun className="text-amber-300" />
+            Farm Status
+          </p>
           <p className="text-xs text-green-200">All crops healthy</p>
-          <div className="w-full bg-gray-700 h-1 mt-2 rounded">
-            <div className="bg-green-500 h-1 rounded w-3/4"></div>
+          <div className="mt-2 h-1 w-full rounded bg-gray-700">
+            <div className="status-progress h-1 w-3/4 rounded bg-green-500" />
           </div>
         </div>
       </div>
