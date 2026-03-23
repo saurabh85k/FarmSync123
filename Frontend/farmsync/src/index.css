@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Global styling for the app shell, farm background, and shared animations. */
 body {
   margin: 0;
   font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',

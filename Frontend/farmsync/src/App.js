@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard';
 import Expenses from './pages/Expenses'; // ✅ IMPORT REAL PAGE
 import './index.css';
 
+// App-level routing keeps all public page navigation in one place.
 // Temporary pages
 const Crops = () => <div className="p-4 text-xl">🌱 Crops Page - Coming Soon</div>;
 const Activities = () => <div className="p-4 text-xl">📋 Activities Page - Coming Soon</div>;
@@ -13,6 +14,7 @@ const Reports = () => <div className="p-4 text-xl">📈 Reports Page - Coming So
 function App() {
   return (
     <BrowserRouter>
+      {/* MainLayout provides the shared sidebar and header shell for app pages. */}
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Dashboard />} />

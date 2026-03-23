@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaSeedling, FaUserCircle } from 'react-icons/fa';
 
+// Header shows app branding and the current-user area above page content.
 const Header = () => {
   return (
     <header className="relative overflow-hidden bg-green-900/90 p-4 text-white shadow-lg backdrop-blur-sm">

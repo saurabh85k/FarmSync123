@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import Header from '../components/common/Header';
 import Sidebar from '../components/common/Sidebar';
 
+// Shared dashboard layout for pages that use the app navigation chrome.
 const MainLayout = () => {
   return (
     <div className="flex">

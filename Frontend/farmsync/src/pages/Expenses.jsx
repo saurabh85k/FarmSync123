@@ -15,6 +15,7 @@ import {
   deleteExpenseApi,
 } from "../api/expensesApi";
 
+// Expenses page handles local CRUD, summaries, and charting for expense data.
 const Expenses = () => {
   const [expenses, setExpenses] = useState([]);
 
@@ -25,22 +26,23 @@ const Expenses = () => {
     crop: "",
   });
 
-  // GET (on load)
+  // Load saved expenses once when the page is first rendered.
   useEffect(() => {
     fetchExpenses();
   }, []);
 
+  // Keep all expense retrieval logic in one place.
   const fetchExpenses = async () => {
     const data = await getExpenses();
     setExpenses(data);
   };
 
-  // form change
+  // Sync each form field into local component state.
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // POST
+  // Persist a new expense and immediately reflect it in the UI.
   const addExpense = async (e) => {
     e.preventDefault();
 
@@ -50,13 +52,13 @@ const Expenses = () => {
     setForm({ title: "", amount: "", date: "", crop: "" });
   };
 
-  // DELETE
+  // Remove an expense from both storage and rendered state.
   const deleteExpense = async (id) => {
     await deleteExpenseApi(id);
     setExpenses(expenses.filter((e) => e.id !== id));
   };
 
-  // calculations
+  // Derived metrics drive the cards and chart without extra stored state.
   const total = expenses.reduce((sum, e) => sum + e.amount, 0);
   const highest = Math.max(...expenses.map((e) => e.amount), 0);
 

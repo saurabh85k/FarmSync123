@@ -8,7 +8,9 @@ import {
   FaTractor,
 } from 'react-icons/fa';
 
+// Dashboard presents a quick operational overview of the farm.
 const Dashboard = () => {
+  // Summary cards shown at the top of the page.
   const stats = [
     { title: 'Total Crops', value: '12', icon: <FaLeaf />, bg: 'bg-green-100/90', text: 'text-green-800' },
     { title: 'Active Crops', value: '8', icon: <FaTractor />, bg: 'bg-blue-100/90', text: 'text-blue-800' },
@@ -16,6 +18,7 @@ const Dashboard = () => {
     { title: 'Harvest Soon', value: '3', icon: <FaCalendarAlt />, bg: 'bg-orange-100/90', text: 'text-orange-800' },
   ];
 
+  // Current crop progress data for the crop summary panel.
   const crops = [
     { name: 'Wheat', area: '5 acres', date: '15 Mar 2024', status: 'Growing', progress: 60 },
     { name: 'Rice', area: '3 acres', date: '20 Mar 2024', status: 'Growing', progress: 45 },
@@ -23,6 +26,7 @@ const Dashboard = () => {
     { name: 'Sugarcane', area: '6 acres', date: '5 Mar 2024', status: 'Growing', progress: 30 },
   ];
 
+  // Recent farm events shown in the activity timeline.
   const activities = [
     { time: '2 hours ago', activity: 'Watering - Wheat field', user: 'Raj' },
     { time: '5 hours ago', activity: 'Fertilizer applied - Rice field', user: 'John' },

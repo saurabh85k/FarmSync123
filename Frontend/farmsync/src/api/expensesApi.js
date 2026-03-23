@@ -1,14 +1,14 @@
-// Fake API using localStorage
+// This lightweight API wrapper stores expense data in localStorage for demos.
 
 const STORAGE_KEY = "expenses_data";
 
-// GET
+// Read the full expense list from browser storage.
 export const getExpenses = async () => {
   const data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
   return data;
 };
 
-// POST
+// Save a new expense and normalize numeric fields before storing.
 export const addExpenseApi = async (expense) => {
   const data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 
@@ -24,7 +24,7 @@ export const addExpenseApi = async (expense) => {
   return newExpense;
 };
 
-// DELETE
+// Delete one expense entry by id.
 export const deleteExpenseApi = async (id) => {
   const data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 

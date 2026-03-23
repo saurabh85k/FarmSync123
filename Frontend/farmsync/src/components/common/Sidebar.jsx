@@ -10,7 +10,9 @@ import {
   FaTractor,
 } from 'react-icons/fa';
 
+// Sidebar keeps the primary navigation links visible across dashboard pages.
 const Sidebar = () => {
+  // Each item maps a route to the label and icon shown in navigation.
   const menuItems = [
     { path: '/', icon: <FaTachometerAlt />, text: 'Dashboard' },
     { path: '/crops', icon: <FaSeedling />, text: 'Crops' },
