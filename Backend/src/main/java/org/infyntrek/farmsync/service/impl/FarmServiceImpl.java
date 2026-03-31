@@ -5,9 +5,11 @@ import java.util.stream.Collectors;
 
 import org.infyntrek.farmsync.dto.FarmDTO;
 import org.infyntrek.farmsync.entity.Farm;
+import org.infyntrek.farmsync.entity.FarmUser;
 import org.infyntrek.farmsync.entity.User;
 import org.infyntrek.farmsync.mapper.FarmMapper;
 import org.infyntrek.farmsync.repository.FarmRepository;
+import org.infyntrek.farmsync.repository.FarmUserRepository;
 import org.infyntrek.farmsync.repository.UserRepository;
 import org.infyntrek.farmsync.service.FarmService;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,7 @@ public class FarmServiceImpl implements FarmService {
 	
 	private final FarmRepository farmRepository;
 	private final FarmMapper farmMapper;
-	private final UserRepository userRepository;
+	private final FarmUserRepository farmUserRepository;
 
 	@Override
 	public FarmDTO createFarm(FarmDTO farmDTO) {
@@ -48,7 +50,7 @@ public class FarmServiceImpl implements FarmService {
 
 	@Override
 	public List<FarmDTO> getFarmsByUserId(Long userId) {
-		List<Farm> farms = farmRepository.findByUserUserId(userId);
+		List<Farm> farms = farmRepository.findByFarmUserUserId(userId);
 		
 		return farms.stream()
 				.map(farmMapper::toDTO)
@@ -66,9 +68,9 @@ public class FarmServiceImpl implements FarmService {
 		
 		// if userId is present then set user
 		if(farmDTO.getUserId() != null) {
-			User user = userRepository.findById(farmDTO.getUserId())
+			FarmUser user = farmUserRepository.findById(farmDTO.getUserId())
 					.orElseThrow(() -> new RuntimeException("User not found with id: " + farmDTO.getUserId()));
-			existingFarm.setUser(user);
+			existingFarm.setFarmUser(user);
 		}
 		
 		Farm updatedFarm = farmRepository.save(existingFarm);

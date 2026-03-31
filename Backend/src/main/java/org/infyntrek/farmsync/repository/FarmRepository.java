@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FarmRepository extends JpaRepository<Farm, Long> {
 
-	List<Farm> findByUserUserId(Long userId);
+	List<Farm> findByFarmUserUserId(Long userId);
 }

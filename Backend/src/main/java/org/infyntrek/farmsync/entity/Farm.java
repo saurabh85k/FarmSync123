@@ -33,7 +33,7 @@ public class Farm {
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id")
-	private User user;
+	private FarmUser farmUser;
 	
 	@OneToMany(mappedBy = "farm")
 	private List<Crop> crops;
