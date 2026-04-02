@@ -9,7 +9,7 @@ FarmSync is a full-stack web application designed to help farmers and agricultur
 
 It provides a simple dashboard to view insights, manage records, and improve decision-making.
 
-![image alt](https://github.com/saurabh85k/FarmSync123/blob/e12c1964fd776e07fce542961d0adbb688881ada/screenshot2.jpeg)
+![image alt](https://github.com/saurabh85k/FarmSync123/blob/bd41d7803089cd62ed9f6886abe36c0257bc6ff9/screen3.jpeg)
 
 
 #🚀 Features
