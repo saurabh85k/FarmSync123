@@ -25,3 +25,18 @@ It provides a simple dashboard to view insights, manage records, and improve dec
 ![image alt](https://github.com/saurabh85k/FarmSync123/blob/6e601c00d3c3fd26b510cc38a22bfaab9929f26f/sceern3.jpeg)
 
 
+
+#🛠️ Tech Stack
+#Frontend
+#React.js
+#Tailwind CSS
+#Recharts (for charts)
+#Backend
+#Java (Spring Boot)
+#REST APIs
+#Maven
+#Database
+(Add your DB here: MySQL / PostgreSQL / H2)
+
+
+
