@@ -54,7 +54,7 @@ This leads to poor decision-making and financial loss.
 Step 1 — Add Crop Details
 
 User enters crop name, season, and quantity.
-![image alt]()
+![image alt](https://github.com/saurabh85k/FarmSync123/blob/ebc0d6a084316e0040882fb898f1bbdd0838581f/screen5.jpeg)
 Step 2 — Track Expenses
 
 User records fertilizer, seeds, and labor costs.
