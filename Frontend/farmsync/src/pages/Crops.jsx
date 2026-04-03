@@ -1,101 +1,160 @@
-import React, { useState } from "react";
-import { FaSeedling, FaPlus, FaTrash } from "react-icons/fa";
+import React, { useMemo, useState } from 'react';
+import { FaPlus, FaSearch, FaSeedling, FaSlidersH, FaTrash } from 'react-icons/fa';
+
+const initialCrops = [
+  { id: 1, name: 'Wheat', area: '5 acres', status: 'Growing', progress: 68, season: 'Rabi' },
+  { id: 2, name: 'Rice', area: '3 acres', status: 'Growing', progress: 44, season: 'Kharif' },
+  { id: 3, name: 'Corn', area: '4 acres', status: 'Ready', progress: 92, season: 'Summer' },
+  { id: 4, name: 'Sugarcane', area: '6 acres', status: 'Growing', progress: 31, season: 'Annual' },
+];
 
 const Crops = () => {
-  const [crops, setCrops] = useState([
-    { id: 1, name: "Wheat", area: "5 acres", status: "Growing", progress: 60 },
-    { id: 2, name: "Rice", area: "3 acres", status: "Growing", progress: 45 },
-    { name: "Corn", area: "4 acres", status: "Harvesting", progress: 90 },
-    { name: "Sugarcane", area: "6 acres", status: "Growing", progress: 30 },
-  ]);
+  const [crops, setCrops] = useState(initialCrops);
+  const [form, setForm] = useState({ name: '', area: '' });
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('All');
 
-  const [form, setForm] = useState({ name: "", area: "" });
-  const [search, setSearch] = useState("");
+  const addCrop = (event) => {
+    event.preventDefault();
 
-  const addCrop = (e) => {
-    e.preventDefault();
     const newCrop = {
       id: Date.now(),
-      ...form,
-      status: "Growing",
-      progress: 10,
+      name: form.name,
+      area: form.area,
+      status: 'Growing',
+      progress: 12,
+      season: 'New',
     };
+
     setCrops([newCrop, ...crops]);
-    setForm({ name: "", area: "" });
+    setForm({ name: '', area: '' });
   };
 
   const deleteCrop = (id) => {
-    setCrops(crops.filter((c) => c.id !== id));
+    setCrops(crops.filter((crop) => crop.id !== id));
   };
 
-  const filtered = crops.filter((c) =>
-    c.name.toLowerCase().includes(search.toLowerCase())
+  const filteredCrops = useMemo(
+    () =>
+      crops.filter((crop) => {
+        const matchesSearch = crop.name.toLowerCase().includes(search.toLowerCase());
+        const matchesStatus = statusFilter === 'All' || crop.status === statusFilter;
+        return matchesSearch && matchesStatus;
+      }),
+    [crops, search, statusFilter]
   );
 
   return (
-    <div className="main-content p-6 space-y-6">
-      
-      {/* Add Crop */}
-      <form onSubmit={addCrop} className="glass-panel p-4 rounded-xl flex gap-3">
-        <input
-          placeholder="Crop name"
-          value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
-          className="p-2 border rounded w-full"
-          required
-        />
-        <input
-          placeholder="Area"
-          value={form.area}
-          onChange={(e) => setForm({ ...form, area: e.target.value })}
-          className="p-2 border rounded w-full"
-          required
-        />
-        <button className="bg-green-600 text-white px-4 rounded flex items-center gap-2">
-          <FaPlus /> Add
-        </button>
-      </form>
+    <div className="space-y-5">
+      <section className="app-panel p-6 md:p-7">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <div className="micro-label">Crop Management</div>
+            <h1 className="page-title mt-2">Manage crop cycles with clarity</h1>
+            <p className="page-subtitle mt-3 max-w-2xl">
+              Track crop area, current growth stage, and progress in one compact workspace built with the same premium FarmSync system.
+            </p>
+          </div>
+          <button className="app-button-primary self-start lg:self-auto">
+            <FaPlus />
+            Add Crop
+          </button>
+        </div>
 
-      {/* Search */}
-      <input
-        type="text"
-        placeholder="Search crops..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="w-full p-3 rounded-xl border"
-      />
+        <div className="mt-6 grid gap-3 lg:grid-cols-[1.35fr_0.8fr_auto]">
+          <label className="relative block">
+            <FaSearch className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
+            <input
+              type="text"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Search crops..."
+              className="app-input pl-11"
+            />
+          </label>
+          <label className="relative block">
+            <FaSlidersH className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
+            <select
+              value={statusFilter}
+              onChange={(event) => setStatusFilter(event.target.value)}
+              className="app-select pl-11"
+            >
+              <option>All</option>
+              <option>Growing</option>
+              <option>Ready</option>
+            </select>
+          </label>
+          <form onSubmit={addCrop} className="grid gap-3 sm:grid-cols-3 lg:grid-cols-3">
+            <input
+              placeholder="Crop name"
+              value={form.name}
+              onChange={(event) => setForm({ ...form, name: event.target.value })}
+              className="app-input"
+              required
+            />
+            <input
+              placeholder="Area"
+              value={form.area}
+              onChange={(event) => setForm({ ...form, area: event.target.value })}
+              className="app-input"
+              required
+            />
+            <button className="app-button-secondary" type="submit">
+              <FaPlus />
+              Quick Add
+            </button>
+          </form>
+        </div>
+      </section>
 
-      {/* Crop List */}
-      <div className="glass-panel p-6 rounded-3xl shadow-xl">
-        <h1 className="text-xl font-bold mb-4 flex gap-2 items-center">
-          <FaSeedling /> Crop Management
-        </h1>
-
-        {filtered.map((crop) => (
-          <div key={crop.id} className="mb-4 p-4 bg-white/70 rounded-xl">
-            <div className="flex justify-between">
-              <div>
-                <h2 className="font-semibold">{crop.name}</h2>
-                <p className="text-sm text-gray-500">{crop.area}</p>
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        {filteredCrops.map((crop) => (
+          <article key={crop.id} className="app-panel app-card-hover p-5">
+            <div className="flex items-start justify-between gap-3">
+              <div className="rounded-2xl bg-emerald-500/12 p-3 text-2xl text-emerald-300">
+                <FaSeedling />
               </div>
-
               <button
                 onClick={() => deleteCrop(crop.id)}
-                className="text-red-500"
+                className="rounded-xl border border-white/8 bg-white/4 p-2 text-slate-400 transition hover:border-red-400/20 hover:bg-red-500/8 hover:text-red-300"
               >
                 <FaTrash />
               </button>
             </div>
 
-            <div className="mt-2 h-2 bg-gray-200 rounded-full">
-              <div
-                className="h-2 bg-green-500 rounded-full"
-                style={{ width: `${crop.progress}%` }}
-              />
+            <div className="mt-5">
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="text-xl font-semibold text-white">{crop.name}</h2>
+                <span
+                  className={`rounded-full px-3 py-1 text-xs font-medium ${
+                    crop.status === 'Ready'
+                      ? 'bg-amber-400/15 text-amber-300'
+                      : 'bg-emerald-400/15 text-emerald-300'
+                  }`}
+                >
+                  {crop.status}
+                </span>
+              </div>
+              <p className="mt-2 text-sm text-slate-400">
+                {crop.area} • {crop.season} season
+              </p>
             </div>
-          </div>
+
+            <div className="mt-5">
+              <div className="mb-2 flex items-center justify-between text-sm">
+                <span className="text-slate-400">Growth Progress</span>
+                <span className="font-medium text-white">{crop.progress}%</span>
+              </div>
+              <div className="h-2 rounded-full bg-white/8">
+                <div
+                  className={`h-2 rounded-full ${crop.status === 'Ready' ? 'bg-amber-400' : 'bg-emerald-400'}`}
+                  style={{ width: `${crop.progress}%` }}
+                />
+              </div>
+            </div>
+          </article>
         ))}
-      </div>
+      </section>
     </div>
   );
 };

@@ -1,116 +1,155 @@
-import React, { useState } from "react";
-import { FaChartBar, FaCheckCircle, FaExclamationTriangle, FaArrowUp, FaSeedling } from "react-icons/fa";
+import React, { useState } from 'react';
+import {
+  Cell,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
+import { FaArrowUp, FaChartLine, FaDownload, FaSeedling } from 'react-icons/fa';
+
+const trendData = [
+  { name: 'Jan', yield: 34, profit: 18 },
+  { name: 'Feb', yield: 42, profit: 24 },
+  { name: 'Mar', yield: 46, profit: 29 },
+  { name: 'Apr', yield: 53, profit: 33 },
+  { name: 'May', yield: 58, profit: 38 },
+  { name: 'Jun', yield: 62, profit: 44 },
+];
+
+const cropMix = [
+  { name: 'Wheat', value: 38 },
+  { name: 'Rice', value: 26 },
+  { name: 'Corn', value: 18 },
+  { name: 'Sugarcane', value: 18 },
+];
+
+const reportsColors = ['#4ade80', '#38bdf8', '#fbbf24', '#a78bfa'];
 
 const Reports = () => {
-  const [filter, setFilter] = useState("Monthly");
-
-  // Sample data (later from backend)
-  const data = [
-    { crop: "Wheat", revenue: 12000, expense: 5000 },
-    { crop: "Rice", revenue: 8000, expense: 4000 },
-    { crop: "Corn", revenue: 5000, expense: 3000 },
-  ];
-
-  const totalRevenue = data.reduce((sum, d) => sum + d.revenue, 0);
-  const totalExpense = data.reduce((sum, d) => sum + d.expense, 0);
-  const profit = totalRevenue - totalExpense;
-
-  const bestCrop = data.reduce((best, curr) =>
-    curr.revenue - curr.expense > best.revenue - best.expense ? curr : best
-  );
+  const [filter, setFilter] = useState('Monthly');
 
   return (
-    <div className="main-content p-6 space-y-6">
-
-      {/* HEADER */}
-      <div className="glass-panel p-6 rounded-3xl flex justify-between items-center">
-        <h1 className="text-2xl font-bold flex items-center gap-2">
-          <FaChartBar /> Reports
-        </h1>
-
-        <select
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          className="p-2 border rounded"
-        >
-          <option>Monthly</option>
-          <option>Yearly</option>
-        </select>
-      </div>
-
-      {/* SUMMARY */}
-      <div className="grid grid-cols-3 gap-4">
-        <div className="bg-green-100 p-4 rounded-xl">
-          <p className="font-semibold">Revenue</p>
-          <h2 className="text-xl font-bold">₹{totalRevenue}</h2>
+    <div className="space-y-5">
+      <section className="app-panel p-6 md:p-7">
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <div className="micro-label">Farm Analytics</div>
+            <h1 className="page-title mt-2">Actionable reports in a cleaner premium layout</h1>
+            <p className="page-subtitle mt-3 max-w-2xl">
+              Keep trends, crop mix, and insight cards in one compact analytics dashboard without changing the core app layout.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <select value={filter} onChange={(event) => setFilter(event.target.value)} className="app-select min-w-[150px]">
+              <option>Monthly</option>
+              <option>Quarterly</option>
+              <option>Yearly</option>
+            </select>
+            <button className="app-button-primary">
+              <FaDownload />
+              Export Report
+            </button>
+          </div>
         </div>
+      </section>
 
-        <div className="bg-red-100 p-4 rounded-xl">
-          <p className="font-semibold">Expense</p>
-          <h2 className="text-xl font-bold">₹{totalExpense}</h2>
-        </div>
+      <section className="grid gap-4 md:grid-cols-3">
+        {[
+          { title: 'Yield Growth', value: '+18.4%', tone: 'text-emerald-300' },
+          { title: 'Net Margin', value: '+12.1%', tone: 'text-sky-300' },
+          { title: 'Best Crop', value: 'Wheat', tone: 'text-amber-300' },
+        ].map((item) => (
+          <article key={item.title} className="app-panel app-card-hover p-5">
+            <div className="text-sm text-slate-400">{item.title}</div>
+            <div className={`mt-3 text-3xl font-semibold tracking-tight ${item.tone}`}>{item.value}</div>
+          </article>
+        ))}
+      </section>
 
-        <div className="bg-blue-100 p-4 rounded-xl">
-          <p className="font-semibold">Profit</p>
-          <h2 className="text-xl font-bold">₹{profit}</h2>
-        </div>
-      </div>
+      <section className="grid gap-5 xl:grid-cols-[1.2fr_0.8fr]">
+        <article className="app-panel p-6">
+          <div className="mb-5 flex items-center gap-3">
+            <FaChartLine className="text-emerald-300" />
+            <h2 className="text-2xl font-semibold text-white">Performance trends</h2>
+          </div>
+          <ResponsiveContainer width="100%" height={320}>
+            <LineChart data={trendData}>
+              <XAxis dataKey="name" stroke="#64748b" tickLine={false} axisLine={false} />
+              <YAxis stroke="#64748b" tickLine={false} axisLine={false} />
+              <Tooltip
+                contentStyle={{
+                  background: '#0f1720',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  borderRadius: '16px',
+                  color: '#fff',
+                }}
+              />
+              <Line type="monotone" dataKey="yield" stroke="#4ade80" strokeWidth={3} dot={{ r: 4 }} />
+              <Line type="monotone" dataKey="profit" stroke="#38bdf8" strokeWidth={3} dot={{ r: 4 }} />
+            </LineChart>
+          </ResponsiveContainer>
+        </article>
 
-      {/* Crop Breakdown */}
-      <div className="glass-panel p-6 rounded-3xl">
-        <h2 className="font-semibold mb-4 flex items-center gap-2">
-          <FaSeedling className="text-green-600" />
-          Crop Performance
-        </h2>
+        <article className="app-panel p-6">
+          <div className="mb-5 flex items-center gap-3">
+            <FaSeedling className="text-emerald-300" />
+            <h2 className="text-2xl font-semibold text-white">Crop mix</h2>
+          </div>
+          <ResponsiveContainer width="100%" height={260}>
+            <PieChart>
+              <Pie data={cropMix} dataKey="value" nameKey="name" innerRadius={56} outerRadius={88} paddingAngle={4}>
+                {cropMix.map((entry, index) => (
+                  <Cell key={entry.name} fill={reportsColors[index % reportsColors.length]} />
+                ))}
+              </Pie>
+              <Tooltip
+                contentStyle={{
+                  background: '#0f1720',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  borderRadius: '16px',
+                  color: '#fff',
+                }}
+              />
+            </PieChart>
+          </ResponsiveContainer>
 
-        {data.map((item, index) => {
-          const profit = item.revenue - item.expense;
-          const percent = (profit / item.revenue) * 100;
-
-          return (
-            <div key={index} className="mb-4">
-              <div className="flex justify-between">
-                <p>{item.crop}</p>
-                <p className="text-sm">₹{profit}</p>
+          <div className="mt-5 space-y-3">
+            {cropMix.map((item, index) => (
+              <div key={item.name} className="flex items-center justify-between text-sm">
+                <div className="flex items-center gap-3 text-slate-300">
+                  <span className="h-3 w-3 rounded-full" style={{ backgroundColor: reportsColors[index] }} />
+                  {item.name}
+                </div>
+                <span className="text-slate-400">{item.value}%</span>
               </div>
+            ))}
+          </div>
+        </article>
+      </section>
 
-              <div className="h-2 bg-gray-200 rounded-full mt-1">
-                <div
-                  className="h-2 bg-green-500 rounded-full"
-                  style={{ width: `${percent}%` }}
-                />
-              </div>
+      <section className="grid gap-4 lg:grid-cols-3">
+        {[
+          'Wheat continues to outperform the seasonal average with stronger mid-cycle growth.',
+          'Profitability improved after irrigation costs were reduced over the last six weeks.',
+          'Corn inventory suggests an opportunity to shift more budget toward fertilizer efficiency.',
+        ].map((insight, index) => (
+          <article key={insight} className="app-panel app-card-hover p-5">
+            <div className="mb-4 inline-flex rounded-full bg-emerald-400/12 px-3 py-1 text-xs font-medium text-emerald-300">
+              Insight {index + 1}
             </div>
-          );
-        })}
-      </div>
-
-      {/* Insights */}
-      <div className="glass-panel p-6 rounded-3xl bg-yellow-50">
-        <h2 className="font-semibold mb-4">Insights</h2>
-
-        <div className="flex items-center gap-2 text-gray-800 mb-2">
-          <FaCheckCircle className="text-green-600" />
-          <p>
-            Best performing crop: <b>{bestCrop.crop}</b>
-          </p>
-        </div>
-
-        {profit < 0 && (
-          <div className="flex items-center gap-2 text-red-500">
-            <FaExclamationTriangle />
-            <p>Warning: Your farm is running at a loss</p>
-          </div>
-        )}
-
-        {profit > 0 && (
-          <div className="flex items-center gap-2 text-green-600">
-            <FaArrowUp />
-            <p>Farm is profitable. Keep optimizing costs.</p>
-          </div>
-        )}
-      </div>
-
+            <p className="text-sm leading-7 text-slate-300">{insight}</p>
+            <div className="mt-4 flex items-center gap-2 text-sm text-emerald-300">
+              <FaArrowUp />
+              Trending positive
+            </div>
+          </article>
+        ))}
+      </section>
     </div>
   );
 };
