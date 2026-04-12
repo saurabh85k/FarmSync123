@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1.0/crops")
+@RequestMapping("api/v1/crops")
 public class CropController {
 
 	private final CropService cropService;

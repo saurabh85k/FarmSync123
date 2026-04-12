@@ -17,6 +17,7 @@ public class ActivityMapper {
 				.activityType(activity.getActivityType())
 				.description(activity.getDescription())
 				.date(activity.getDate())
+				.cropId(activity.getCrop() != null ? activity.getCrop().getCropId() : null)
 				.build();
 	}
 	

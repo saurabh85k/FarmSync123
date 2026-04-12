@@ -1,35 +1,34 @@
-// This lightweight API wrapper stores expense data in localStorage for demos.
+import { apiDelete, apiGet, apiPost, apiPut } from './apiClient';
 
-const STORAGE_KEY = "expenses_data";
-
-// Read the full expense list from browser storage.
-export const getExpenses = async () => {
-  const data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-  return data;
+// Get all expenses by cropId
+export const getExpenses = async (cropId) => {
+  if (!cropId) return [];
+  return await apiGet(`/api/v1/expenses/crop/${cropId}`);
 };
 
-// Save a new expense and normalize numeric fields before storing.
+// Add a new expense
 export const addExpenseApi = async (expense) => {
-  const data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-
-  const newExpense = {
-    id: Date.now(),
-    ...expense,
+  return await apiPost('/api/v1/expenses', {
+    category: expense.title,       // frontend uses "title", backend uses "category"
     amount: Number(expense.amount),
-  };
-
-  const updated = [newExpense, ...data];
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-
-  return newExpense;
+    description: expense.title,
+    date: expense.date,
+    cropId: Number(expense.crop),  // frontend sends crop name
+  });
 };
 
-// Delete one expense entry by id.
+// Delete an expense
 export const deleteExpenseApi = async (id) => {
-  const data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  return await apiDelete(`/api/v1/expenses/${id}`);
+};
 
-  const updated = data.filter((e) => e.id !== id);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-
-  return true;
+// Update an expense
+export const updateExpenseApi = async (id, expense) => {
+  return await apiPut(`/api/v1/expenses/${id}`, {
+    category: expense.category,
+    amount: Number(expense.amount),
+    description: expense.description,
+    date: expense.date,
+    cropId: expense.cropId,
+  });
 };

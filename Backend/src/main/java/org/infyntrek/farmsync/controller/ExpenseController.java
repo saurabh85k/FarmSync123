@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1.0/expenses")
+@RequestMapping("api/v1/expenses")
 public class ExpenseController {
 
 	private final ExpenseService expenseService;

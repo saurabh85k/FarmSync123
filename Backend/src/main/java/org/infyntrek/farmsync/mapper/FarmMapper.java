@@ -17,6 +17,7 @@ public class FarmMapper {
 				.farmName(farm.getFarmName())
 				.location(farm.getLocation())
 				.areaSize(farm.getAreaSize())
+				.userId(farm.getUser() != null ? farm.getUser().getId() : null)
 				.build();
 	}
 	

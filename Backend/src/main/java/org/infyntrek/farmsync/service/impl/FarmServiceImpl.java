@@ -5,14 +5,14 @@ import java.util.stream.Collectors;
 
 import org.infyntrek.farmsync.dto.FarmDTO;
 import org.infyntrek.farmsync.entity.Farm;
-import org.infyntrek.farmsync.entity.FarmUser;
 import org.infyntrek.farmsync.entity.User;
+import org.infyntrek.farmsync.exception.ResourceNotFoundException;
 import org.infyntrek.farmsync.mapper.FarmMapper;
 import org.infyntrek.farmsync.repository.FarmRepository;
-import org.infyntrek.farmsync.repository.FarmUserRepository;
 import org.infyntrek.farmsync.repository.UserRepository;
 import org.infyntrek.farmsync.service.FarmService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,7 +22,7 @@ public class FarmServiceImpl implements FarmService {
 	
 	private final FarmRepository farmRepository;
 	private final FarmMapper farmMapper;
-	private final FarmUserRepository farmUserRepository;
+	private final UserRepository userRepository;
 
 	@Override
 	public FarmDTO createFarm(FarmDTO farmDTO) {
@@ -35,7 +35,7 @@ public class FarmServiceImpl implements FarmService {
 	@Override
 	public FarmDTO getFarmById(Long farmId) {
 		Farm farm = farmRepository.findById(farmId)
-				.orElseThrow(() -> new RuntimeException("Farm not found with: " + farmId));
+				.orElseThrow(() -> new ResourceNotFoundException("Farm not found with: " + farmId));
 		return farmMapper.toDTO(farm);
 	}
 
@@ -50,7 +50,7 @@ public class FarmServiceImpl implements FarmService {
 
 	@Override
 	public List<FarmDTO> getFarmsByUserId(Long userId) {
-		List<Farm> farms = farmRepository.findByFarmUserUserId(userId);
+		List<Farm> farms = farmRepository.findByUserId(userId);
 		
 		return farms.stream()
 				.map(farmMapper::toDTO)
@@ -58,9 +58,10 @@ public class FarmServiceImpl implements FarmService {
 	}
 
 	@Override
+	@Transactional
 	public FarmDTO updateFarm(Long farmId, FarmDTO farmDTO) {
 		Farm existingFarm = farmRepository.findById(farmId)
-				.orElseThrow(() -> new RuntimeException("Farm not found with id: " + farmId));
+				.orElseThrow(() -> new ResourceNotFoundException("Farm not found with id: " + farmId));
 		
 		existingFarm.setFarmName(farmDTO.getFarmName());
 		existingFarm.setAreaSize(farmDTO.getAreaSize());
@@ -68,9 +69,9 @@ public class FarmServiceImpl implements FarmService {
 		
 		// if userId is present then set user
 		if(farmDTO.getUserId() != null) {
-			FarmUser user = farmUserRepository.findById(farmDTO.getUserId())
-					.orElseThrow(() -> new RuntimeException("User not found with id: " + farmDTO.getUserId()));
-			existingFarm.setFarmUser(user);
+			User user = userRepository.findById(farmDTO.getUserId())
+					.orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + farmDTO.getUserId()));
+			existingFarm.setUser(user);
 		}
 		
 		Farm updatedFarm = farmRepository.save(existingFarm);
@@ -79,9 +80,10 @@ public class FarmServiceImpl implements FarmService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteFarm(Long farmId) {
 		Farm farm = farmRepository.findById(farmId)
-				.orElseThrow(() -> new RuntimeException("Farm not found with: " + farmId));
+				.orElseThrow(() -> new ResourceNotFoundException("Farm not found with: " + farmId));
 		farmRepository.delete(farm);
 	}
 

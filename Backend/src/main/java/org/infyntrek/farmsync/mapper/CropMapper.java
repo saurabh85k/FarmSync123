@@ -18,6 +18,7 @@ public class CropMapper {
 				.season(crop.getSeason())
 				.sowingDate(crop.getSowingDate())
 				.expectedHarvest(crop.getExpectedHarvest())
+				.farmId(crop.getFarm() != null ? crop.getFarm().getFarmId() : null)
 				.build();
 	}
 	

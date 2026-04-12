@@ -6,11 +6,13 @@ import java.util.stream.Collectors;
 import org.infyntrek.farmsync.dto.CropDTO;
 import org.infyntrek.farmsync.entity.Crop;
 import org.infyntrek.farmsync.entity.Farm;
+import org.infyntrek.farmsync.exception.ResourceNotFoundException;
 import org.infyntrek.farmsync.mapper.CropMapper;
 import org.infyntrek.farmsync.repository.CropRepository;
 import org.infyntrek.farmsync.repository.FarmRepository;
 import org.infyntrek.farmsync.service.CropService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,16 +26,21 @@ public class CropServiceImpl implements CropService {
 
 	@Override
 	public CropDTO createCrop(CropDTO cropDTO) {
-		Crop crop = cropMapper.toEntity(cropDTO);
-		Crop savedCrop = cropRepository.save(crop);
-		
-		return cropMapper.toDTO(savedCrop);
+	    Crop crop = cropMapper.toEntity(cropDTO);
+
+	    if (cropDTO.getFarmId() != null) {
+	        Farm farm = farmRepository.findById(cropDTO.getFarmId())
+	                .orElseThrow(() -> new ResourceNotFoundException("Farm not found with id: " + cropDTO.getFarmId()));
+	        crop.setFarm(farm);
+	    }
+
+	    return cropMapper.toDTO(cropRepository.save(crop));
 	}
 
 	@Override
 	public CropDTO getCropById(Long cropId) {
 		Crop crop = cropRepository.findById(cropId)
-				.orElseThrow(() -> new RuntimeException("Crop not found with id: " + cropId));
+				.orElseThrow(() -> new ResourceNotFoundException("Crop not found with id: " + cropId));
 		
 		return cropMapper.toDTO(crop);
 	}
@@ -57,9 +64,10 @@ public class CropServiceImpl implements CropService {
 	}
 
 	@Override
+	@Transactional
 	public CropDTO updateCrop(Long cropId, CropDTO cropDTO) {
 		Crop existingCrop = cropRepository.findById(cropId)
-				.orElseThrow(() -> new RuntimeException("Crop not found with id: " + cropId));
+				.orElseThrow(() -> new ResourceNotFoundException("Crop not found with id: " + cropId));
 		
 		existingCrop.setCropName(cropDTO.getCropName());
 		existingCrop.setSeason(cropDTO.getSeason());
@@ -69,7 +77,7 @@ public class CropServiceImpl implements CropService {
 		// update farm if needed
 		if(cropDTO.getFarmId() != null) {
 			Farm farm = farmRepository.findById(cropDTO.getFarmId())
-					.orElseThrow(() -> new RuntimeException("Farm not found with id: " + cropDTO.getFarmId()));
+					.orElseThrow(() -> new ResourceNotFoundException("Farm not found with id: " + cropDTO.getFarmId()));
 			
 			existingCrop.setFarm(farm);
 		}
@@ -80,9 +88,10 @@ public class CropServiceImpl implements CropService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteCrop(Long cropId) {
 		Crop crop = cropRepository.findById(cropId)
-				.orElseThrow(() -> new RuntimeException("Crop not found with id: " + cropId));
+				.orElseThrow(() -> new ResourceNotFoundException("Crop not found with id: " + cropId));
 		
 		cropRepository.delete(crop);
 	}

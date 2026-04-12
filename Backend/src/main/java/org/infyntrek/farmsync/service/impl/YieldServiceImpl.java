@@ -6,11 +6,13 @@ import java.util.stream.Collectors;
 import org.infyntrek.farmsync.dto.YieldDTO;
 import org.infyntrek.farmsync.entity.Crop;
 import org.infyntrek.farmsync.entity.Yield;
+import org.infyntrek.farmsync.exception.ResourceNotFoundException;
 import org.infyntrek.farmsync.mapper.YieldMapper;
 import org.infyntrek.farmsync.repository.CropRepository;
 import org.infyntrek.farmsync.repository.YieldRepository;
 import org.infyntrek.farmsync.service.YieldService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,16 +26,21 @@ public class YieldServiceImpl implements YieldService {
 
 	@Override
 	public YieldDTO createYield(YieldDTO yieldDTO) {
-		Yield yield = yieldMapper.toEntity(yieldDTO);
-		Yield savedYield = yieldRepository.save(yield);
-		
-		return yieldMapper.toDTO(savedYield);
+	    Yield yield = yieldMapper.toEntity(yieldDTO);
+
+	    if (yieldDTO.getCropId() != null) {
+	        Crop crop = cropRepository.findById(yieldDTO.getCropId())
+	                .orElseThrow(() -> new ResourceNotFoundException("Crop not found with id: " + yieldDTO.getCropId()));
+	        yield.setCrop(crop);
+	    }
+
+	    return yieldMapper.toDTO(yieldRepository.save(yield));
 	}
 
 	@Override
 	public YieldDTO getYieldById(Long yieldId) {
 		Yield yield = yieldRepository.findById(yieldId)
-				.orElseThrow(() -> new RuntimeException("Yield not found with id: " + yieldId));
+				.orElseThrow(() -> new ResourceNotFoundException("Yield not found with id: " + yieldId));
 		
 		return yieldMapper.toDTO(yield);
 	}
@@ -48,9 +55,10 @@ public class YieldServiceImpl implements YieldService {
 	}
 
 	@Override
+	@Transactional
 	public YieldDTO updateYield(Long yieldId, YieldDTO yieldDTO) {
 		Yield existingYield = yieldRepository.findById(yieldId)
-				.orElseThrow(() -> new RuntimeException("Yield not found with id: " + yieldId));
+				.orElseThrow(() -> new ResourceNotFoundException("Yield not found with id: " + yieldId));
 		
 		existingYield.setIncome(yieldDTO.getIncome());
 		existingYield.setQuantity(yieldDTO.getQuantity());
@@ -59,7 +67,7 @@ public class YieldServiceImpl implements YieldService {
 		// update crop if needed
 		if(yieldDTO.getCropId() != null) {
 			Crop crop = cropRepository.findById(yieldDTO.getCropId())
-					.orElseThrow(() -> new RuntimeException("Crop not found with id: " + yieldDTO.getCropId()));
+					.orElseThrow(() -> new ResourceNotFoundException("Crop not found with id: " + yieldDTO.getCropId()));
 			
 			existingYield.setCrop(crop);
 		}
@@ -70,9 +78,10 @@ public class YieldServiceImpl implements YieldService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteYield(Long yieldId) {
 		Yield yield = yieldRepository.findById(yieldId)
-				.orElseThrow(() -> new RuntimeException("Yield not found with id: " + yieldId));
+				.orElseThrow(() -> new ResourceNotFoundException("Yield not found with id: " + yieldId));
 		
 		yieldRepository.delete(yield);
 	}

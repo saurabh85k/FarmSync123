@@ -48,11 +48,13 @@ public class AuthServiceImpl implements AuthService {
             throw new EmailAlreadyExistsException("Email is already registered");
         }
 
-        User user = new User();
-        user.setName(request.getName());
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(Role.USER);
+        User user = User.builder()
+                .name(request.getName())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .phone(request.getPhone())   // new
+                .role(Role.USER)
+                .build();
 
         User savedUser = userRepository.save(user);
         String jwtToken = jwtService.generateToken(buildClaims(savedUser), savedUser);

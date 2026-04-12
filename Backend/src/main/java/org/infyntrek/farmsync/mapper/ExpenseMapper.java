@@ -18,6 +18,7 @@ public class ExpenseMapper {
 				.amount(expense.getAmount())
 				.description(expense.getDescription())
 				.date(expense.getDate())
+				.cropId(expense.getCrop() != null ? expense.getCrop().getCropId() : null)
 				.build();
 	}
 	

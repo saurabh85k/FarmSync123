@@ -17,6 +17,7 @@ public class YieldMapper {
 				.quantity(yield.getQuantity())
 				.income(yield.getIncome())
 				.harvestDate(yield.getHarvestDate())
+				.cropId(yield.getCrop() != null ? yield.getCrop().getCropId() : null)
 				.build();
 	}
 	

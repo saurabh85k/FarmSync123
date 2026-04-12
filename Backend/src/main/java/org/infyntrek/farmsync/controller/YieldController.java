@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1.0/yields")
+@RequestMapping("api/v1/yields")
 public class YieldController {
 
 	private final YieldService yieldService;

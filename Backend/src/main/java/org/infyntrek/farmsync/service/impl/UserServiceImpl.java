@@ -39,6 +39,7 @@ public class UserServiceImpl implements UserService {
                 user.getId(),
                 user.getName(),
                 user.getEmail(),
+                user.getPhone(),   // new
                 user.getRole().name()
         );
     }
