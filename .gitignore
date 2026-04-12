@@ -17,4 +17,4 @@ Frontend/farmsync/build/
 .classpath
 .project
 .settings/
-*.sts4-cache
+*.sts4-cacheBackend/target/
