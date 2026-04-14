@@ -16,9 +16,12 @@ A modern full-stack web application that helps farmers manage crops, expenses, a
 - 🔐 Authentication System (login/register)
 
 ---
+
 ## 🌐 Live Demo
 
 🔗 https://farm-sync123.vercel.app
+
+---
 
 ## 🖥️ Screenshots
 
@@ -74,16 +77,23 @@ A modern full-stack web application that helps farmers manage crops, expenses, a
 - REST APIs
 
 ### Database
-- MySql
+- MySQL
 
 ### Deployment
 - Frontend → Vercel
 - Backend → Render
 
-  ###Author
-  -Mimansa(Team Leader)
-  -Saurabh
-  -Sayan
-  -Lokesh
+---
 
----------------------------------------------------------
+## 👩‍💻 Team
+
+- 👩‍💻 **Mimansa Sharma** – Team Lead  
+- 👨‍💻 **Saurabh**  
+- 👨‍💻 **Sayan**  
+- 👨‍💻 **Lokesh**
+
+---
+
+## 📌 Note
+
+This project is built for learning, innovation, and improving digital solutions for modern farming 🌾🚜
