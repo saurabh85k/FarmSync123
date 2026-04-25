@@ -55,6 +55,21 @@ const Dashboard = () => {
     },
   ];
 
+  const cropLines = [
+    { label: 'Wheat', color: '#4ade80', points: [42, 58, 61, 69, 66, 72, 70, 81, 86] },
+    { label: 'Rice', color: '#3b82f6', points: [30, 37, 54, 66, 59, 55, 57, 50, 63] },
+    { label: 'Corn', color: '#f59e0b', points: [16, 12, 18, 27, 46, 44, 35, 29, 41] },
+  ];
+
+  const linePath = (points) => {
+    const stepX = 100 / (points.length - 1);
+    return points.map((point, index) => {
+      const x = index * stepX;
+      const y = 100 - point;
+      return `${index === 0 ? 'M' : 'L'} ${x} ${y}`;
+    }).join(' ');
+  };
+
   const activities = [
     { icon: <FaBottleWater />, title: 'Watering - Wheat field', meta: '2 hours ago by Raj', color: '#3b82f6' },
     { icon: <LuLeaf />, title: 'Fertilizer applied - Rice field', meta: '5 hours ago by John', color: '#22c55e' },
@@ -64,33 +79,29 @@ const Dashboard = () => {
 
   return (
     <div className="space-y-6">
-      {/* Hero Section with Background Image */}
+      {/* Hero Section */}
       <section 
-        className="dashboard-hero relative overflow-hidden rounded-[32px] p-8 text-white shadow-2xl min-h-[400px] flex items-center"
+        className="dashboard-hero relative overflow-hidden rounded-[32px] p-8 text-white shadow-2xl min-h-[380px] flex items-center"
         style={{ backgroundImage: "url('/background.png')" }}
       >
         <div className="dashboard-hero-overlay absolute inset-0 rounded-[32px]" />
-        
         <div className="relative z-10 w-full flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
           <div className="max-w-2xl">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-emerald-500/20 px-4 py-2 text-sm font-bold backdrop-blur-md border border-emerald-500/30">
               <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
               Farm status is looking strong today
             </div>
-            <h1 className="text-4xl font-black tracking-tight md:text-5xl lg:text-6xl text-white">
+            <h1 className="text-4xl font-black tracking-tight md:text-5xl lg:text-6xl">
               Good Morning, <br />
               <span className="text-emerald-400">Farmer!</span>
             </h1>
-            <p className="mt-6 text-lg font-medium opacity-90 leading-relaxed max-w-xl text-slate-100">
+            <p className="mt-6 text-lg font-medium opacity-90 leading-relaxed text-slate-100 max-w-xl">
               Your fields are healthy and growth is on track. Here's a quick overview of your farm's performance today.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <button
-                onClick={() => {
-                  const target = document.querySelector('#crop-overview');
-                  target?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="rounded-2xl bg-emerald-500 px-6 py-3.5 text-sm font-bold text-white shadow-xl shadow-emerald-500/30 transition-all hover:bg-emerald-400 hover:scale-105 active:scale-95 flex items-center gap-2"
+                onClick={() => document.querySelector('#crop-overview')?.scrollIntoView({ behavior: 'smooth' })}
+                className="rounded-2xl bg-emerald-500 px-6 py-3.5 text-sm font-bold text-white shadow-xl shadow-emerald-500/30 transition-all hover:bg-emerald-400 hover:scale-105 flex items-center gap-2"
               >
                 View Farm Overview <FaArrowRight />
               </button>
@@ -102,7 +113,6 @@ const Dashboard = () => {
               </button>
             </div>
           </div>
-
           <div className="lg:w-80">
             <div className="rounded-3xl bg-black/40 p-6 backdrop-blur-xl border border-white/10">
               <div className="flex items-center justify-between">
@@ -132,7 +142,7 @@ const Dashboard = () => {
               <p className="mt-1 text-xs font-medium text-[var(--text-secondary)]">{stat.detail}</p>
             </div>
             <div 
-              className="flex h-14 w-14 items-center justify-center rounded-2xl text-2xl transition-transform group-hover:rotate-12"
+              className="flex h-14 w-14 items-center justify-center rounded-2xl text-2xl"
               style={{ backgroundColor: stat.bg, color: stat.color }}
             >
               {stat.icon}
@@ -141,15 +151,52 @@ const Dashboard = () => {
         ))}
       </section>
 
-      {/* Main Content Grid */}
-      <section className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      {/* Charts & Activities */}
+      <section className="grid grid-cols-1 gap-6 lg:grid-cols-[1.5fr_1fr]">
         <article id="crop-overview" className="app-panel p-6 bg-[var(--bg-secondary)]">
           <div className="mb-6 flex items-center justify-between">
             <h2 className="text-2xl font-bold text-[var(--text-primary)]">Crop Performance</h2>
             <button onClick={() => navigate('/reports')} className="text-sm font-bold text-[var(--accent-color)] hover:underline">View Analytics</button>
           </div>
-          <div className="h-64 w-full rounded-2xl bg-[var(--bg-primary)] border border-[var(--border-color)] flex items-center justify-center text-[var(--text-muted)] italic">
-            Performance chart visualization would go here
+          
+          <div className="grid gap-6 md:grid-cols-[1fr_200px]">
+            <div className="relative h-72 w-full rounded-2xl bg-[var(--bg-primary)] border border-[var(--border-color)] p-4 overflow-hidden">
+               {/* SVG Chart */}
+               <svg viewBox="0 0 100 100" className="h-full w-full overflow-visible preserve-3d" preserveAspectRatio="none">
+                 {cropLines.map((line) => (
+                   <path
+                     key={line.label}
+                     d={linePath(line.points)}
+                     fill="none"
+                     stroke={line.color}
+                     strokeWidth="1.5"
+                     strokeLinecap="round"
+                     strokeLinejoin="round"
+                     className="transition-all duration-700"
+                   />
+                 ))}
+               </svg>
+               <div className="absolute bottom-2 left-4 right-4 flex justify-between text-[10px] text-[var(--text-muted)] font-bold">
+                 <span>WEEK 1</span><span>WEEK 2</span><span>WEEK 3</span><span>WEEK 4</span>
+               </div>
+            </div>
+
+            <div className="flex flex-col justify-center items-center rounded-2xl bg-[var(--bg-primary)] border border-[var(--border-color)] p-4">
+              <div className="relative h-32 w-32 flex items-center justify-center">
+                <svg className="h-full w-full -rotate-90">
+                  <circle cx="64" cy="64" r="58" stroke="currentColor" strokeWidth="12" fill="transparent" className="text-[var(--border-color)]" />
+                  <circle cx="64" cy="64" r="58" stroke="currentColor" strokeWidth="12" fill="transparent" strokeDasharray="364.4" strokeDashoffset="91.1" className="text-emerald-500" />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <span className="text-2xl font-black text-[var(--text-primary)]">75%</span>
+                  <span className="text-[10px] font-bold text-[var(--text-muted)]">GROWTH</span>
+                </div>
+              </div>
+              <div className="mt-4 text-center">
+                <div className="text-emerald-500 font-bold">▲ 8.5%</div>
+                <div className="text-[10px] text-[var(--text-muted)] uppercase font-bold tracking-wider">vs last month</div>
+              </div>
+            </div>
           </div>
         </article>
 
